@@ -4,7 +4,7 @@ Flask web application for electric field and potential visualization.
 """
 
 from flask import Flask, render_template, request, jsonify
-from Main import Charge, electric_field, potential, compute_grid
+from main import Charge, electric_field, potential, compute_grid
 import numpy as np
 import json
 
