@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Field & Potential Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ Electric Field & Potential Calculator</h1>
+            <p>Interactive 2D visualization for point charges</p>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="panel">
+                    <h2>Charges</h2>
+                    <div id="charges-list"></div>
+                    <button class="btn btn-add" onclick="addCharge()">+ Add Charge</button>
+                    
+                    <h3>Presets</h3>
+                    <button class="btn btn-secondary" onclick="loadDipole()">Electric Dipole</button>
+                    <button class="btn btn-secondary" onclick="loadQuadrupole()">Quadrupole</button>
+                    <button class="btn btn-secondary" onclick="loadTriangle()">Triangle</button>
+                    <button class="btn btn-secondary" onclick="clearCharges()">Clear All</button>
+                </div>
+
+                <div class="panel">
+                    <h2>Visualization Settings</h2>
+                    
+                    <label>
+                        Grid Bounds (meters)
+                        <div class="bounds-grid">
+                            <input type="number" id="xmin" value="-2" step="0.5"> to
+                            <input type="number" id="xmax" value="2" step="0.5">
+                        </div>
+                        <div class="bounds-grid">
+                            <input type="number" id="ymin" value="-2" step="0.5"> to
+                            <input type="number" id="ymax" value="2" step="0.5">
+                        </div>
+                    </label>
+                    
+                    <label>
+                        Resolution: <span id="resolution-value">40</span>
+                        <input type="range" id="resolution" min="20" max="80" value="40" oninput="updateResolutionLabel()">
+                    </label>
+                    
+                    <label>
+                        Softening (ε): 
+                        <input type="number" id="softening" value="0.001" step="0.0001" min="0">
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="show-field" checked onchange="updateVisualization()">
+                        Show Field Vectors
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="show-potential" checked onchange="updateVisualization()">
+                        Show Equipotentials
+                    </label>
+                    
+                    <button class="btn btn-primary" onclick="calculate()">Calculate & Visualize</button>
+                </div>
+
+                <div class="panel">
+                    <h2>Point Calculator</h2>
+                    <label>
+                        X Position (m):
+                        <input type="number" id="point-x" value="0" step="0.1">
+                    </label>
+                    <label>
+                        Y Position (m):
+                        <input type="number" id="point-y" value="0.5" step="0.1">
+                    </label>
+                    <button class="btn btn-secondary" onclick="calculatePoint()">Calculate at Point</button>
+                    <div id="point-results"></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div id="plot"></div>
+                <div id="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Calculating...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
