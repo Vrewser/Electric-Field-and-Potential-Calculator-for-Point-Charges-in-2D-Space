@@ -2,5 +2,5 @@ Flask==3.0.0
 numpy>=1.24.0
 matplotlib>=3.7.0
 
-# Optional: create a public tunnel with ngrok for quick sharing
-pyngrok>=5.0.0
+# (Optional) If you want to create a public tunnel locally you can install
+# the ngrok CLI separately; it's not required by this project.

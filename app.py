@@ -5,6 +5,7 @@ Flask web application for electric field and potential visualization.
 
 from flask import Flask, render_template, request, jsonify
 import os
+import socket
 from main import Charge, electric_field, potential, compute_grid
 import numpy as np
 import json
@@ -126,5 +127,24 @@ if __name__ == '__main__':
             print(f"ngrok tunnel established -> {public_url}")
         except Exception as e:
             print('Failed to start ngrok tunnel:', e)
+
+    # Print a shareable local network URL so you can access the app from other
+    # devices on the same LAN without ngrok.
+    def _get_local_ip():
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            # This doesn't actually send data but lets the OS pick a suitable
+            # outbound interface so we can read the local IP assigned to it.
+            s.connect(('8.8.8.8', 80))
+            ip = s.getsockname()[0]
+        except Exception:
+            ip = '127.0.0.1'
+        finally:
+            s.close()
+        return ip
+
+    local_ip = _get_local_ip()
+    print(f"Local network URL -> http://{local_ip}:{port}")
+    print("Share this URL with devices on the same network (ensure firewall allows the port)")
 
     app.run(debug=debug, host=host, port=port)

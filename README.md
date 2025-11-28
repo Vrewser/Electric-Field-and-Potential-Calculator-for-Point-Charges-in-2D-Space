@@ -19,7 +19,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Note: `pyngrok` is listed in `requirements.txt` and is optional — it's only needed if you want to create a public tunnel.
+Note: creating a public tunnel (ngrok) is optional and not required for this project. If you need a public URL for short-term sharing, use a tunnel tool (ngrok or Cloudflare Tunnel) locally — they are not listed as project dependencies.
 
 ## Running the Application (local)
 
