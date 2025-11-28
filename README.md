@@ -28,72 +28,74 @@ Start the Flask server (defaults to `0.0.0.0:5000`):
 python app.py
 ```
 
-Open in your browser:
+## Installation & Run (Quick)
+
+These instructions make the project easy to run after cloning or when opened in a workspace.
+
+Linux / macOS (recommended)
+```bash
+# create + activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# install dependencies
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# start the app
+python app.py
+```
+
+Windows (PowerShell)
+```powershell
+# create + activate venv
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+**Request body example:**
+python app.py
+```
+
+Open a browser at:
 
 ```
 http://localhost:5000
 ```
 
-## Sharing the App
-
-You can share the app in two common ways:
-
-1. Share on your local network
-
-- Run the server binding to all interfaces (default):
-  ```bash
-  HOST=0.0.0.0 PORT=5000 python app.py
-  ```
-- Find your machine's local IP (e.g. `192.168.1.42`) and share:
-  ```
-  http://192.168.1.42:5000
-  ```
-
-2. Create a public URL using ngrok (quick and easy)
-
-- Install `ngrok` and set your authtoken (optional but recommended):
-  ```bash
-  # install pyngrok already in requirements; to use ngrok binary, visit https://ngrok.com/
-  export NGROK_AUTHTOKEN="<your-ngrok-token>"
-  ```
-- Enable the tunnel and run the app (the app will print the public URL):
-  ```bash
-  export USE_NGROK=1
-  python app.py
-  ```
-- After startup, look for a printed line like:
-  ```
-  ngrok tunnel established -> https://abcd-1234.ngrok.io
-  ```
-  Share the printed `https://...ngrok.io` URL — that's the public URL anyone can open.
-
-Which link to share?
-- If using ngrok: share the ngrok public URL printed by the app (e.g., `https://abcd-1234.ngrok.io`).
-- If on the same local network: share `http://<your-machine-ip>:<PORT>`.
-
-Notes:
-- Running with `HOST=0.0.0.0` makes the server reachable from other devices on the same network — ensure your firewall allows the port.
-- Ngrok tunnels are temporary (unless you have a paid account with custom domains).
-
-## API Endpoints
-
-### POST /api/calculate
-Calculate electric field and potential on a grid.
-
-**Request body example:**
-```json
-{
-  "charges": [{"q": 1e-9, "x": 0, "y": 0}],
-  "bounds": {"xmin": -2, "xmax": 2, "ymin": -2, "ymax": 2},
-  "resolution": 50,
-  "softening": 0.001
-}
+Run without a virtualenv (not recommended):
+```bash
+python -m pip install -r requirements.txt
+python app.py
 ```
 
-### POST /api/calculate_point
-Calculate field and potential at a single point.
+Running in a remote workspace / container
+- If the project is running inside a remote workspace (GitHub Codespaces, devcontainer, or a cloud IDE) and you need the app accessible from your host browser, start the server bound to all interfaces:
+```bash
+HOST=0.0.0.0 PORT=5000 python app.py
+```
+- Then use your workspace's port‑forwarding UI (VS Code, Codespaces, etc.) to open `http://localhost:5000` in your browser.
 
-**Request body example:**
+Note: this project is intended for local development and classroom sharing. No external tunnel or cloud deployment is required.
+
+## Troubleshooting
+
+- Port already in use: if `python app.py` fails because port 5000 is occupied, pick another port:
+  ```bash
+  PORT=8000 python app.py
+  ```
+- Server not reachable from host in remote workspace: ensure you started with `HOST=0.0.0.0` and that port forwarding is enabled in your IDE.
+- Missing dependencies / import errors: make sure the virtualenv is activated and `pip install -r requirements.txt` completed without errors.
+
+Quick check that server is running locally:
+```bash
+curl -v http://127.0.0.1:5000/
+```
+
+If you see HTML output (HTTP 200) the app is running.
 ```json
 {
   "charges": [{"q": 1e-9, "x": 0, "y": 0}],

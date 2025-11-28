@@ -5,7 +5,6 @@ Flask web application for electric field and potential visualization.
 
 from flask import Flask, render_template, request, jsonify
 import os
-import socket
 from main import Charge, electric_field, potential, compute_grid
 import numpy as np
 import json
@@ -113,38 +112,12 @@ def calculate_point():
 
 if __name__ == '__main__':
     # Read host/port/debug configuration from environment so the server
-    # can be easily exposed (e.g., in containers or cloud instances).
-    host = os.getenv('HOST', '0.0.0.0')
+    # can be started in a development environment or workspace.
+    host = os.getenv('HOST', '127.0.0.1')
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
-    # Optionally start an ngrok tunnel if USE_NGROK is set (useful for quick sharing)
-    use_ngrok = os.getenv('USE_NGROK', '')
-    if use_ngrok:
-        try:
-            from pyngrok import ngrok
-            public_url = ngrok.connect(port)
-            print(f"ngrok tunnel established -> {public_url}")
-        except Exception as e:
-            print('Failed to start ngrok tunnel:', e)
-
-    # Print a shareable local network URL so you can access the app from other
-    # devices on the same LAN without ngrok.
-    def _get_local_ip():
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            # This doesn't actually send data but lets the OS pick a suitable
-            # outbound interface so we can read the local IP assigned to it.
-            s.connect(('8.8.8.8', 80))
-            ip = s.getsockname()[0]
-        except Exception:
-            ip = '127.0.0.1'
-        finally:
-            s.close()
-        return ip
-
-    local_ip = _get_local_ip()
-    print(f"Local network URL -> http://{local_ip}:{port}")
-    print("Share this URL with devices on the same network (ensure firewall allows the port)")
-
+    # Start the Flask development server. For local development open
+    # http://localhost:5000 in your browser. If you run this in a remote
+    # workspace and want to expose the port, set HOST=0.0.0.0 when starting.
     app.run(debug=debug, host=host, port=port)
