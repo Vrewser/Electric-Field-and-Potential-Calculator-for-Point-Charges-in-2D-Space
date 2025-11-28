@@ -21,7 +21,16 @@ function removeCharge(id) {
 function updateCharge(id, field, value) {
     const charge = charges.find(c => c.id === id);
     if (charge) {
-        charge[field] = parseFloat(value);
+        // Parse numeric input safely; if parsing fails, leave the existing value
+        const parsed = parseFloat(value);
+        if (!isNaN(parsed)) {
+            charge[field] = parsed;
+        } else {
+            // fallback: assign raw value (shouldn't usually happen for number inputs)
+            charge[field] = value;
+        }
+        // Re-render the charges list so classes/labels update (positive vs negative)
+        renderCharges();
     }
 }
 
@@ -259,6 +268,8 @@ function updateVisualization() {
             title: 'y (meters)'
         },
         hovermode: 'closest',
+        /* Allow click-and-drag panning */
+        dragmode: 'pan',
         showlegend: true,
         legend: {
             x: 1.2,
@@ -266,8 +277,15 @@ function updateVisualization() {
         },
         margin: { l: 60, r: 200, t: 80, b: 60 }
     };
-    
-    Plotly.newPlot('plot', traces, layout, { responsive: true });
+
+    // Enable scroll-wheel zooming via config.scrollZoom and keep responsive layout
+    const config = {
+        responsive: true,
+        scrollZoom: true,
+        displayModeBar: true
+    };
+
+    Plotly.newPlot('plot', traces, layout, config);
 }
 
 async function calculatePoint() {

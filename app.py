@@ -4,6 +4,7 @@ Flask web application for electric field and potential visualization.
 """
 
 from flask import Flask, render_template, request, jsonify
+import os
 from main import Charge, electric_field, potential, compute_grid
 import numpy as np
 import json
@@ -110,4 +111,20 @@ def calculate_point():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Read host/port/debug configuration from environment so the server
+    # can be easily exposed (e.g., in containers or cloud instances).
+    host = os.getenv('HOST', '0.0.0.0')
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('DEBUG', 'True').lower() in ('1', 'true', 'yes')
+
+    # Optionally start an ngrok tunnel if USE_NGROK is set (useful for quick sharing)
+    use_ngrok = os.getenv('USE_NGROK', '')
+    if use_ngrok:
+        try:
+            from pyngrok import ngrok
+            public_url = ngrok.connect(port)
+            print(f"ngrok tunnel established -> {public_url}")
+        except Exception as e:
+            print('Failed to start ngrok tunnel:', e)
+
+    app.run(debug=debug, host=host, port=port)
