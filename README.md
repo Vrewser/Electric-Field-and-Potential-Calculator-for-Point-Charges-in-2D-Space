@@ -125,5 +125,3 @@ If you see HTML output (HTTP 200) the app is running.
 - Electric field is in N/C or V/m
 - Potential is in Volts (V)
 - The softening parameter (ε) prevents singularities at charge locations
-
-If you want, I can add a small section that shows a one-line command to run and print both the local and public URLs automatically on startup.
